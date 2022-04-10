@@ -6,7 +6,7 @@ export function fetchCountries(name) {
     return fetch(`${MAIN_URL}/${name}?fields=${fields}`)
         .then(response => {
             if (!response.ok) {
-                throw Error(response.statusText)
+                throw Error(response.statusText);
             }
             return response.json();
         })

@@ -17,52 +17,52 @@ const countryInfo = document.querySelector('.country-info');
 function onShowCountryList() {
    
     const searchCountryName = searchCountryInput.value.trim();
-    if (searchCountryName === '') {
+
           countryList.innerHTML = '';
           countryInfo.innerHTML = '';
        
-        return;
-   }
-    fetchCountries(searchCountryName)
-        .then(onShowCountryName)
+    if (searchCountryName) {
+        fetchCountries(searchCountryName)
+        .then(onRequest)
         .catch(error => {
-             
-        Notify.failure("Oops, there is no country with that name");
-   
+             Notify.failure("Oops, there is no country with that name");
             console.log(error);
     } );
-    
+    }
 }
 
-function onShowCountryName(data) {
-   
+function onRequest(data) {
+
     if (data.length > 10) {
        Notify.info("Too many matches found. Please enter a more specific name.");
         return;
     }
+    onShowCountry(data);
+}
 
-  
-        const newCountryName = data
-            .map(({ name: { official }, flags: { svg } }) =>
-                `<li class="country-name'">
+function onShowCountry(data) {
+   
+     
+    const newCountryName = data
+        .map(({ name: { official }, flags: { svg } }) =>
+            `<li class="country-name'">
                     <img src="${svg}" alt="${official}" width = '30px'>
                     ${official}
                 </li>`)
-            .join('');
-        countryList.innerHTML = newCountryName;
-    
+        .join('');
+        
+    countryList.innerHTML = newCountryName;
     countryList.classList.remove('new-size');
-    onShowCountryInfo(data); 
-     
-    
-   }
-   
+    countryInfo.innerHTML = '';
 
-function onShowCountryInfo(data) {
-
+    if (data.length > 10) {
+       Notify.info("Too many matches found. Please enter a more specific name.");
+        return;
+    }
+        
     if (data.length === 1) {
- const newCountryInfo = data.map((data) => 
-     ` <p>
+        const newCountryInfo = data.map((data) =>
+            ` <p>
           <span class="country-data">Capital:</span>
            ${data.capital}
         </p>
@@ -74,12 +74,16 @@ function onShowCountryInfo(data) {
             <span class="country-data">Languages:</span>
             ${Object.values(data.languages)}
         </p>`
- ).join('');
+        ).join('');
         
         countryInfo.innerHTML = newCountryInfo;
         countryList.classList.add('new-size');
-    }  
+    
+    }
 }
+   
+
+
 
 
 
