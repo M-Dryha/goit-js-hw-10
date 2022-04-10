@@ -1,6 +1,9 @@
+
+import { fetchCountries } from './helpers/api';
 import './css/styles.css';
 import debounce from 'lodash.debounce';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+
 
 const DEBOUNCE_DELAY = 300;
 
@@ -9,7 +12,6 @@ const countryList = document.querySelector('.country-list');
 const countryInfo = document.querySelector('.country-info');
 
  searchCountryInput.addEventListener('input', debounce(onShowCountryList, DEBOUNCE_DELAY));
-
 
 
 function onShowCountryList() {
@@ -32,25 +34,6 @@ function onShowCountryList() {
     
 }
 
-
-function fetchCountries(name) {
-
-    countryList.innerHTML = '';
-    countryInfo.innerHTML = '';
-
-    const MAIN_URL= 'https://restcountries.com/v3.1/name';
-    const fields = `name,capital,population,flags,languages`;
-    return fetch(`${MAIN_URL}/${name}?fields=${fields}`)
-        .then(response => {
-            if (!response.ok) {
-                throw Error(response.statusText)
-            }
-            return response.json();
-        })
-}
-        
-
-
 function onShowCountryName(data) {
    
     if (data.length > 10) {
@@ -61,14 +44,14 @@ function onShowCountryName(data) {
   
         const newCountryName = data
             .map(({ name: { official }, flags: { svg } }) =>
-                `<li>
+                `<li class="country-name'">
                     <img src="${svg}" alt="${official}" width = '30px'>
                     ${official}
                 </li>`)
             .join('');
         countryList.innerHTML = newCountryName;
     
-    countryList.classList.remove('newSizeLetter');
+    countryList.classList.remove('new-size');
     onShowCountryInfo(data); 
      
     
@@ -93,12 +76,8 @@ function onShowCountryInfo(data) {
         </p>`
  ).join('');
         
-        // newCountryName.classList.add('newSizeLetter');
-       
-        
-    
         countryInfo.innerHTML = newCountryInfo;
-        countryList.classList.add('newSizeLetter');
+        countryList.classList.add('new-size');
     }  
 }
 
