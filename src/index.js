@@ -55,10 +55,7 @@ function onShowCountry(data) {
     countryList.classList.remove('new-size');
     countryInfo.innerHTML = '';
 
-    if (data.length > 10) {
-       Notify.info("Too many matches found. Please enter a more specific name.");
-        return;
-    }
+  
         
     if (data.length === 1) {
         const newCountryInfo = data.map((data) =>
